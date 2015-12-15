@@ -18,7 +18,7 @@ var ORIG_CSS = "css";
 var ORIG_SCRIPTS = "scripts";
 var DEST = "build";
 
-gulp.task("transpile", function () {
+gulp.task("ts", function () {
 	var tsRes = gulp.src(ORIG_SCRIPTS + "/**/*.ts")
 		.pipe(ts({
 			noImplicitAny: true
@@ -37,7 +37,7 @@ gulp.task("css", function () {
 		.pipe(gulp.dest(DEST + "/css"));
 });
 
-gulp.task('minify', ["css"], function () {
+gulp.task('minify', function () {
     return gulp.src([ORIG_CSS + '/**/*.css', '!' + ORIG_CSS + '/**/*.min.css'])
 		.pipe(rename({ extname: '.min.css' }))
 		.pipe(minifyCSS())
@@ -45,7 +45,7 @@ gulp.task('minify', ["css"], function () {
 		.pipe(gulp.dest(DEST + "/css"));
 });
 
-gulp.task("uglify", ["transpile"], function () {
+gulp.task("uglify", function () {
 	return gulp.src([ORIG_SCRIPTS + '/**/*.js', '!' + ORIG_SCRIPTS + '/**/*.min.js'])
         .pipe(rename({ extname: '.min.js' }))
         .pipe(uglify())
@@ -63,7 +63,7 @@ gulp.task("clean", function () {
 });
 
 
-gulp.task("inject", ["clean", "transpile", "css", "minify", "uglify"], function () {
+gulp.task("inject", function () {
 	var argv = yargs.argv;
 
 	var dev = argv.dev || argv.d
@@ -92,5 +92,5 @@ gulp.task("dev", function () {
     gulp.watch(ORIG_CSS + '/**/*.less', ['css']);
 });
 
-gulp.task("default", ["clean", "transpile", "css", "uglify", "minify", "inject"]);
+gulp.task("default", ["clean", "ts", "css", "uglify", "minify", "inject"]);
 
